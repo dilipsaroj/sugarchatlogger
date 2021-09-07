@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { withStyles, Avatar, Button, CssBaseline, FormControlLabel, Checkbox, Paper, Box, Grid, 
-    Typography, TextField, AppBar, Toolbar, ButtonBase } from '@material-ui/core';
+import {  Button,  Grid, TextField, } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CommentIcon from '@material-ui/icons/Comment';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import EmojiEmotionsTwoToneIcon from '@material-ui/icons/EmojiEmotionsTwoTone';
 
 export class Main extends Component {
     constructor(props){
         super(props);
         this.state={
             emoji:'',
+            commentdata:'',
+            commentView:false,
             viewPanel:false,
             liked:"",
             cardData:[
@@ -21,7 +21,6 @@ export class Main extends Component {
                 {name:"Random User",des:"This cars se best car",toggle:false,likeCount:0,emoCount:0}
         ]}
       }
-
 
       handleLike = (Index)=>{
         let count = 0
@@ -41,7 +40,7 @@ export class Main extends Component {
         }
 
       emoHandle = (Index) =>{
-          console.log("clicked")
+        // console.log("clicked")
         let count = 0
         let UpdatedCardData = this.state.cardData;
 
@@ -78,13 +77,26 @@ export class Main extends Component {
         });
 
         this.setState({
-            cardData : UpdatedCardData
-        }, ()=>{console.log(this.state)});
-
+            cardData : UpdatedCardData,
+        });
+    }
+    
+    handleInput=(e,index)=>{
+        let count = 0;
+        if(index == count){
+            this.setState({
+                commentdata:e.target.value
+            })
+        }
+      count = count + 1;
       }
+
     submitHandle = (e,index) =>{
+
             e.preventDefault();
-            console.log("Data Submitted")
+            this.setState({
+                commentView:true,
+            })
     }
     render() {
    
@@ -106,17 +118,25 @@ export class Main extends Component {
                                     <Grid item lg={6} md={6} sm={6} xs={6} flex-direction="row" >
                                         <ThumbUpAltIcon  onClick={()=>this.handleLike(index)}/>
                                         <EmojiEmotionsIcon onClick={()=>this.emoHandle(index)}/>
-                                        <CommentIcon onClick={()=>this.handleComment(index)}/>
+                                        <CommentIcon onClick={(e)=>this.handleComment(index)}/>
                                    </Grid>
                                    <label className="counter_style">{data.likeCount}</label>
                                    <label className="emo_style">{data.emoCount}</label>
                                    {data.toggle ? 
                                        <Grid container lg={12} md={12} sm={12} xs={12} flex-direction="row">
+                                       {
+                                           this.state.commentView ? 
+                                           <Grid item lg={12} md={12} sm={12} xs={12} >
+                                                <label className="">{this.state.commentdata}</label>
+                                            </Grid>
+                                           : null
+                                       }
+                                  
                                        <Grid item lg={9} md={9} sm={9} xs={12}>
                                            <TextField style={{ marginTop: '0' }}
-                                                    type="email" variant="outlined" margin="normal" 
-                                                    required fullWidth id="userName"
-                                                    name="userName" autoComplete="off"
+                                                    type="email" variant="outlined" margin="normal" onChange={(e)=>this.handleInput(e,index)}
+                                                    required fullWidth id="commentdata" value={this.state.commentdata}
+                                                    name="commentdata" autoComplete="off"
                                            />
                                         </Grid>   
                                         <Grid item lg={3} md={3} sm={3} xs={6} >
